@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>REACT — Reactive Egocentric Agent for Contact-rich Humanoid–Human Interaction</title>
+  <meta name="description" content="CoRL 2026. Learning deployable humanoid-human interaction policies from human-human demonstrations via VLM-guided semantic contact retargeting and generative partner-state modeling.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css?v=5">
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="site-nav">
+  <div class="site-nav__brand">
+    REACT<span class="dot">.</span> <small>CoRL 2026</small>
+  </div>
+  <nav class="site-nav__links">
+    <a href="#deploy">Results</a>
+    <a href="#method">Method</a>
+    <a href="#bibtex">Cite</a>
+  </nav>
+</header>
+
+<aside class="toc" aria-label="Contents">
+  <div class="toc__title">Contents</div>
+  <a href="#deploy"><span class="n">01</span>Real-robot deployment</a>
+  <a href="#sim-eval"><span class="n">02</span>Sim rollouts · unseen</a>
+  <a href="#abstract"><span class="n">03</span>Abstract</a>
+  <a href="#approach"><span class="n">04</span>Contact-centric approach</a>
+  <a href="#method"><span class="n">05</span>Method</a>
+  <a href="#contact"><span class="n">06</span>VLM contact annotation</a>
+  <a href="#retarget-qual"><span class="n">07</span>Retargeting · qualitative</a>
+  <a href="#retarget-quant"><span class="n">08</span>Retargeting · quantitative</a>
+  <a href="#student"><span class="n">09</span>Student policy in sim</a>
+  <a href="#occlusion"><span class="n">10</span>Occlusion robustness</a>
+  <a href="#contributions"><span class="n">11</span>Key contributions</a>
+  <a href="#bibtex"><span class="n">12</span>BibTeX</a>
+</aside>
+
+<main>
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="wrap">
+    <h1 class="hero__title reveal">
+      VLM-Guided Contact Retargeting and Generative Partner Modeling for
+      Deployable Humanoid&ndash;Human Interaction
+    </h1>
+
+    <div class="hero__authors reveal" style="transition-delay:.06s">
+      <span>Yuto Shibata<sup>*1</sup></span>
+      <span>Kotaro Amaya<sup>*1</sup></span>
+      <span>Kashu Yamazaki<sup>2</sup></span>
+      <span>Lalit Jayanti<sup>2</sup></span>
+      <span>Yoshimitsu Aoki<sup>1</sup></span>
+      <span>Mariko Isogawa<sup>1</sup></span>
+      <span>Katerina Fragkiadaki<sup>2</sup></span>
+    </div>
+    <div class="hero__affils reveal" style="transition-delay:.09s">
+      <span><sup>1</sup>&nbsp;Keio University</span>
+      <span><sup>2</sup>&nbsp;Carnegie Mellon University</span>
+      <span><sup>*</sup>&nbsp;Equal contribution</span>
+    </div>
+
+    <p class="hero__venue reveal" style="transition-delay:.12s">CoRL 2026</p>
+
+    <p class="hero__intro reveal" style="transition-delay:.15s">
+      We present <b class="hero__brand">REACT</b> &mdash; a
+      <span class="acc">R</span>eactive <span class="acc">E</span>gocentric
+      <span class="acc">A</span>gent for <span class="acc">C</span>ontact-rich
+      Humanoid&ndash;Human In<span class="acc">T</span>eraction.
+    </p>
+
+    <div class="actions reveal" style="transition-delay:.34s">
+      <a class="btn" aria-disabled="true" title="Paper link coming soon">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+        Paper &middot; coming soon
+      </a>
+      <a href="#" class="btn" aria-disabled="true" title="Code release coming soon">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+        Code · soon
+      </a>
+      <a href="#deploy" class="btn">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Video
+      </a>
+    </div>
+
+    <div class="hero__media reveal" style="transition-delay:.38s">
+      <figure class="vframe">
+        <video autoplay muted loop playsinline preload="auto">
+          <source src="static/videos/real_depthview.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <p class="cap">
+        A single egocentric <b>depth</b> policy executes contact-rich interactions on a real
+        Unitree&nbsp;G1 using <b>onboard sensing alone</b> &mdash; left: onboard RGB context;
+        right: the depth observation the policy consumes. Faces blurred for privacy.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ REAL DEPLOY ============================ -->
+<section class="band band--alt" id="deploy">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§01</span>
+      <h2 class="band__title">Real-robot deployment</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p class="lead">
+        REACT's egocentric depth policy executes five contact-rich interactions on a real Unitree G1
+        humanoid using only onboard sensing. Faces blurred for privacy.
+      </p>
+    </div>
+
+    <div class="vgrid-deploy reveal">
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
+    </div>
+
+    <figure class="vfeature reveal">
+      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_longhorizon_hug.mp4" type="video/mp4"></video></div>
+      <p class="cap">
+        <b>Long-horizon · hug ×3.</b> A single continuous rollout in which the policy performs three
+        consecutive hugs, demonstrating stable long-horizon contact-rich interaction.
+      </p>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ============================ IN-SIM EVAL / UNSEEN MOTIONS ============================ -->
+<section class="band" id="sim-eval">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§02</span>
+      <h2 class="band__title">Simulation rollouts <span class="sub-em">/ unseen motions</span></h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p class="lead">
+        Student-policy rollouts on <strong class="kc">held-out motion files never seen during
+        training</strong>. For each interaction we show the rollout next to the
+        <strong>actual egocentric depth stream the policy consumes</strong> &mdash; no partner state,
+        no external tracking, no privileged information. The motion ID of each held-out file is
+        listed on the right.
+      </p>
+    </div>
+
+    <div class="evalstack">
+      <div class="evalpair reveal">
+        <div class="evalpair__head">
+          <span class="evalpair__name">Link arms</span>
+          <span class="evalpair__id">eval split · G001T004A022R014</span>
+        </div>
+        <div class="evalpair__vids">
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_linkarms.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel">Policy rollout</span>
+          </div>
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_linkarms_depth.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel vlabel--depth">Model input · egocentric depth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="evalpair reveal">
+        <div class="evalpair__head">
+          <span class="evalpair__name">Pat on back</span>
+          <span class="evalpair__id">eval split · G032T002A011R003</span>
+        </div>
+        <div class="evalpair__vids">
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_patback.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel">Policy rollout</span>
+          </div>
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_patback_depth.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel vlabel--depth">Model input · egocentric depth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="evalpair reveal">
+        <div class="evalpair__head">
+          <span class="evalpair__name">High-five</span>
+          <span class="evalpair__id">eval split · G016T003A016R008</span>
+        </div>
+        <div class="evalpair__vids">
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_highfive.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel">Policy rollout</span>
+          </div>
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_highfive_depth.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel vlabel--depth">Model input · egocentric depth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="evalpair reveal">
+        <div class="evalpair__head">
+          <span class="evalpair__name">Shake hands</span>
+          <span class="evalpair__id">eval split · G001T000A001R005</span>
+        </div>
+        <div class="evalpair__vids">
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_shake.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel">Policy rollout</span>
+          </div>
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_shake_depth.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel vlabel--depth">Model input · egocentric depth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="evalpair reveal">
+        <div class="evalpair__head">
+          <span class="evalpair__name">Hug</span>
+          <span class="evalpair__id">eval split · G032T000A000R005</span>
+        </div>
+        <div class="evalpair__vids">
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_hug.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel">Policy rollout</span>
+          </div>
+          <div class="vcell">
+            <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_eval_hug_depth.mp4" type="video/mp4"></video></figure>
+            <span class="vlabel vlabel--depth">Model input · egocentric depth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ ABSTRACT ============================ -->
+<section class="band band--alt" id="abstract">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§03</span>
+      <h2 class="band__title">Abstract</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p class="drop">
+        Humanoid&ndash;human interaction requires robots to operate under severe partial
+        observability: during close physical contact, the human partner is frequently occluded,
+        truncated, or outside the robot's field of view, causing human pose-estimation systems to
+        fail and often necessitating external tracking or privileged human state. At the same time,
+        heavy mutual occlusions introduce errors into the human&ndash;human motion-capture data used
+        for learning.
+      </p>
+      <p>
+        We present <strong>REACT</strong>, a framework for learning deployable humanoid&ndash;human
+        interaction policies from human&ndash;human demonstrations. REACT treats
+        <strong class="kc">semantic contact structure</strong> as the key supervisory signal connecting demonstration
+        processing, interaction learning, and onboard control. First, a
+        <strong class="kc">VLM-guided contact modeling and retargeting</strong> pipeline identifies semantically
+        meaningful contacts and transfers them onto humanoid&ndash;human geometry while preserving
+        interaction structure. Using these annotations, privileged interaction policies learn
+        physically grounded behaviors through interaction-aware contact rewards and are subsequently
+        distilled into deployable egocentric depth policies trained entirely from onboard sensing
+        using photorealistic SMPL-X rendering of dynamic human partners. To address severe partial
+        observability, we additionally introduce <strong class="kc">generative partner-state modeling</strong>
+        objectives that predict partner motion from egocentric observations, encouraging
+        latent interaction-state inference under heavy occlusion.
+      </p>
+      <p>
+        We evaluate REACT in simulation and on a real Unitree G1 humanoid across diverse
+        contact-rich interactions, including high-fives, hugs, handshakes, pat-on-back, and link-arm
+        behaviors. Semantic contact modeling substantially improves preservation of demonstrated
+        interactions, while generative partner-state modeling significantly improves robustness under
+        occlusion. On real hardware, REACT executes diverse humanoid&ndash;human interactions
+        <strong class="kc">using onboard sensing alone</strong> and outperforms a baseline relying on external pose
+        estimation.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ MOTIVATION ============================ -->
+<section class="band" id="approach">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§04</span>
+      <h2 class="band__title">A contact-centric approach</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p class="lead">
+        Social, assistive interactions are fundamentally <strong>characterized by physical
+        contact</strong>. REACT makes contact the central abstraction: semantic contact annotations
+        drive both <em>retargeting</em> and <em>reinforcement learning</em> (via a contact reward),
+        so the structure that defines an interaction between two humans is preserved when transferred
+        to a humanoid and learned as a control policy.
+      </p>
+    </div>
+    <figure class="plate reveal" style="margin-top:2rem">
+      <img src="static/images/motivation.png" alt="Contact-centric interactions: assistive walking, handshake, and hug with highlighted contacts">
+    </figure>
+  </div>
+</section>
+
+
+<!-- ============================ METHOD ============================ -->
+<section class="band band--alt" id="method">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§05</span>
+      <h2 class="band__title">Method</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        REACT couples three stages around semantic contact &mdash; VLM-guided contact annotation,
+        contact-preserving retargeting, and depth-based policy learning with generative partner
+        modeling &mdash; ending in zero-shot deployment on a real G1.
+      </p>
+    </div>
+
+    <figure class="plate reveal" style="margin-top:2rem">
+      <img src="static/images/pipeline.png" alt="REACT full pipeline overview">
+      <p class="cap">
+        <b>Overview.</b> From contact-aware retargeting of human demonstrations (Sec. 3.1) through
+        teacher&ndash;student policy learning (Sec. 3.2&ndash;3.3) to real deployment (Sec. 4).
+      </p>
+    </figure>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step__body">
+          <div class="step__num">STAGE 01</div>
+          <h3 class="step__title">VLM-guided semantic contact annotation</h3>
+          <p>
+            Close-range motion-capture references are noisy: proximity alone produces many spurious
+            contacts. REACT renders each demonstration from <strong>multiple views over time</strong>
+            and asks a vision&ndash;language model to classify distance-based candidates as true or
+            false by reasoning over the action description and multi-view evidence, yielding
+            <strong class="kc">semantically meaningful contacts</strong>.
+          </p>
+        </div>
+        <figure class="plate step__media">
+          <img src="static/images/method_contact_annot.png" alt="VLM-guided contact annotation from noisy motion data">
+        </figure>
+      </div>
+
+      <div class="step reveal">
+        <div class="step__body">
+          <div class="step__num">STAGE 02</div>
+          <h3 class="step__title">Contact-preserving interaction retargeting</h3>
+          <p>
+            Filtered contact labels are projected from the SMPL-X human surface onto the
+            humanoid&ndash;human geometry through a <strong class="kc">dense mesh mapping</strong>. A
+            <strong class="kc">G1&ndash;human co-optimization</strong> retargets the demonstration so annotated
+            contacts are reproduced on the robot while global interaction structure is preserved
+            across the embodiment gap.
+          </p>
+        </div>
+        <figure class="plate step__media">
+          <img src="static/images/method_retargeting.png" alt="Contact-preserving interaction retargeting pipeline">
+        </figure>
+      </div>
+
+      <div class="step reveal">
+        <div class="step__body">
+          <div class="step__num">STAGE 03</div>
+          <h3 class="step__title">Depth policy &amp; generative partner modeling</h3>
+          <p>
+            A privileged <strong>teacher</strong> learns physically grounded behaviors with full
+            partner state and a <strong class="kc">mesh-level contact reward</strong>, then is distilled into a deployable
+            <strong>student</strong> that observes only onboard depth and proprioception. An
+            <strong class="kc">interaction denoiser</strong> predicts past, present, and future partner motion as an
+            auxiliary task, recovering latent state under occlusion. At deployment, onboard depth
+            from DepthAnything&nbsp;3 drives the same policy zero-shot.
+          </p>
+        </div>
+        <figure class="plate step__media">
+          <img src="static/images/method_policy.png" alt="Teacher-student depth-based policy learning with auxiliary partner prediction">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ VLM CONTACT ============================ -->
+<section class="band" id="contact">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§06</span>
+      <h2 class="band__title">VLM-guided semantic contact annotation</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        VLM filtering raises precision and F1 over a distance-only baseline (trading a little recall),
+        producing contact labels more correlated with human-annotated ground truth. The VLM keeps
+        semantically valid contacts (<span class="kw kw-green">green</span>) and removes spurious
+        proximity candidates (<span class="kw kw-amber">red</span>) across categories.
+      </p>
+    </div>
+
+    <div class="split reveal">
+      <figure class="plate">
+        <img src="static/images/chart_vlm_prf.png" alt="Precision / Recall / F1 with and without VLM filtering">
+        <p class="cap">Contact-label quality vs. human GT, with and without VLM filtering.</p>
+      </figure>
+      <figure class="plate">
+        <img src="static/images/vlm_contact_grid.png" alt="Qualitative VLM-validated vs. removed contacts over time for five actions">
+        <p class="cap"><b>VLM-validated</b> (kept, green) vs. distance candidate (removed, red) over time.</p>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RETARGET QUAL ============================ -->
+<section class="band band--alt" id="retarget-qual">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§07</span>
+      <h2 class="band__title">Contact-aware retargeting <span class="sub-em">/ qualitative</span></h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        Compared with OmniRetarget, REACT preserves the interaction's defining contacts on the G1.
+        Each clip shows <em>Original motion · OmniRetarget · Ours</em>.
+      </p>
+    </div>
+
+    <figure class="vfull reveal">
+      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/retarget_highfive.mp4" type="video/mp4"></video></div>
+      <p class="cap"><b>High-five</b> &mdash; Original motion · OmniRetarget · Ours.</p>
+    </figure>
+    <figure class="vfull reveal">
+      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/retarget_hug.mp4" type="video/mp4"></video></div>
+      <p class="cap"><b>Hug</b> &mdash; Original motion · OmniRetarget · Ours.</p>
+    </figure>
+    <figure class="vfull reveal">
+      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/retarget_tile_arrows.mp4" type="video/mp4"></video></div>
+      <p class="cap">Retargeted interactions across the corpus. <span class="kw kw-amber">Red arrows</span> mark the contacts REACT preserves (Ours column).</p>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ============================ RETARGET QUANT ============================ -->
+<section class="band" id="retarget-quant">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§08</span>
+      <h2 class="band__title">Contact-aware retargeting <span class="sub-em">/ quantitative</span></h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        Across a user study and physical-plausibility metrics, REACT attains the best perceived
+        quality and the highest contact precision/recall while keeping jitter and penetration low
+        relative to GMR and OmniRetarget.
+      </p>
+    </div>
+
+    <div class="reveal">
+      <figure class="legendbar quant-legend"><img src="static/images/legend_retarget.png" alt="Legend: GMR, OmniRetarget, Ours w/o VLM, Ours"></figure>
+      <div class="quant-layout">
+        <figure class="plate quant-userstudy"><img src="static/images/chart_userstudy.png" alt="User study rank (lower is better)"></figure>
+        <div class="quant-grid2x2">
+          <figure class="plate"><img src="static/images/chart_precision.png" alt="Contact precision (%)"></figure>
+          <figure class="plate"><img src="static/images/chart_recall.png" alt="Contact recall (%)"></figure>
+          <figure class="plate"><img src="static/images/chart_jitter.png" alt="Jitter (m/s^3)"></figure>
+          <figure class="plate"><img src="static/images/chart_penetration.png" alt="Penetration (cm)"></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ STUDENT QUAL ============================ -->
+<section class="band band--alt" id="student">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§09</span>
+      <h2 class="band__title">Student policy in simulation</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        The deployable student policy consumes <strong>only onboard depth</strong>. During training we
+        render the human partner with <strong class="kc">photorealistic in-loop SMPL-X depth</strong> (left), so
+        the policy learns from realistic human-shaped observations rather than primitive proxies,
+        directly narrowing the sim-to-real gap. From this depth alone it <strong class="kc">predicts the partner's pose as
+        an auxiliary task</strong> (right): <span class="kw kw-green">green</span> is the
+        estimated current state and <span class="kw kw-purple">purple</span> the predicted future state
+        (darker = longer-term), letting it infer latent interaction state under occlusion.
+      </p>
+    </div>
+
+    <div class="vgrid vgrid--2 reveal" style="max-width:920px;margin-left:auto;margin-right:auto">
+      <div class="vcell">
+        <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_depth.mp4" type="video/mp4"></video></figure>
+        <span class="vlabel">Realistic human depth &mdash; policy input</span>
+      </div>
+      <div class="vcell">
+        <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_pose.mp4" type="video/mp4"></video></figure>
+        <span class="vlabel">Partner-pose prediction &mdash; auxiliary task</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ OCCLUSION ROBUSTNESS ============================ -->
+<section class="band" id="occlusion">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§10</span>
+      <h2 class="band__title">Robustness under occlusion <span class="sub-em">/ vs. external pose</span></h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        An external RGB-based human pose estimator (HMR2) becomes inaccurate at close range, where
+        the partner is occluded or truncated. REACT's auxiliary pose loss lets the policy recover
+        interaction state from depth and improves contact recall across nearly all actions.
+      </p>
+    </div>
+
+    <div class="split reveal">
+      <figure>
+        <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_rollout.mp4" type="video/mp4"></video></div>
+        <p class="cap">
+          The <span class="kw kw-amber">HMR2 prediction</span> (red) drifts from the true
+          <span class="kw kw-green">human (sim)</span> at close range while the G1 robot interacts.
+        </p>
+      </figure>
+      <div>
+        <div class="legendbar"><img src="static/images/legend_insim.png" alt="Legend: External human pose (HMR2), Ours w/o aux loss, Ours (E2E)"></div>
+        <figure class="plate">
+          <img src="static/images/chart_insim_recall.png" alt="In-sim contact recall@30cm across five actions">
+          <p class="cap">In-sim contact recall@30&nbsp;cm of the student policy across five actions.</p>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ CONTRIBUTIONS ============================ -->
+<section class="band band--alt" id="contributions">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§11</span>
+      <h2 class="band__title">Key contributions</h2>
+    </div>
+    <div class="contribs reveal">
+      <div class="contrib">
+        <div class="contrib__n">01</div>
+        <p>A <strong class="kc">VLM-guided semantic contact modeling and retargeting</strong> framework that
+        transfers human&ndash;human demonstrations to humanoid&ndash;human interactions while
+        preserving interaction structure across embodiments.</p>
+      </div>
+      <div class="contrib">
+        <div class="contrib__n">02</div>
+        <p>An <strong class="kc">interaction-learning framework</strong> that uses semantic contacts as
+        supervision (contact reward) for physics-based humanoid&ndash;human behavior learning.</p>
+      </div>
+      <div class="contrib">
+        <div class="contrib__n">03</div>
+        <p><strong class="kc">Generative partner-state prediction</strong> objectives that enable latent
+        interaction-state inference under severe partial observability from egocentric depth.</p>
+      </div>
+      <div class="contrib">
+        <div class="contrib__n">04</div>
+        <p>Extensive simulation ablations and <strong class="kc">real-world deployment on a Unitree G1</strong>
+        across diverse contact-rich humanoid&ndash;human interactions, using onboard sensing alone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ BIBTEX ============================ -->
+<section class="band" id="bibtex">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§12</span>
+      <h2 class="band__title">BibTeX</h2>
+    </div>
+    <div class="narrow reveal">
+      <div class="bibtex">
+        <button class="copy-button" id="copyBibtex" title="Copy BibTeX">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:.95em;height:.95em"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+<pre><code id="bibtex-content"><span class="k">@inproceedings</span>{shibata2026react,
+  title     = {{REACT}: Reactive Egocentric Agent for Contact-rich Humanoid-Human Interaction},
+  author    = {Shibata, Yuto and Amaya, Kotaro and Yamazaki, Kashu and Jayanti, Lalit and Aoki, Yoshimitsu and Isogawa, Mariko and Fragkiadaki, Katerina},
+  booktitle = {Conference on Robot Learning (CoRL)},
+  year      = {2026}
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>REACT &middot; CoRL 2026.</span>
+    <span>Template &amp; type system hand-built · inspired by <a href="https://nerfies.github.io/" target="_blank" rel="noopener">Nerfies</a></span>
+  </div>
+</footer>
+
+<script src="static/js/index.js?v=3"></script>
+</body>
+</html>
