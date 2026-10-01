@@ -76,3 +76,42 @@ document.addEventListener('DOMContentLoaded', () => {
     videos.forEach((v) => vidObserver.observe(v));
   }
 });
+
+// ---- Partner-prediction carousel ----
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-pcar]').forEach((root) => {
+    const track = root.querySelector('.pcar__track');
+    const slides = root.querySelectorAll('.pcar__slide');
+    const chips = root.querySelectorAll('.pcar__chip');
+    const nEl = root.querySelector('[data-pcar-n]');
+    const n = slides.length;
+    let cur = 0;
+    const go = (i) => {
+      cur = (i + n) % n;
+      track.style.transform = `translateX(${-100 * cur}%)`;
+      chips.forEach((c, k) => {
+        c.classList.toggle('is-active', k === cur);
+        c.setAttribute('aria-pressed', k === cur ? 'true' : 'false');
+      });
+      slides.forEach((s, k) => s.setAttribute('aria-hidden', k === cur ? 'false' : 'true'));
+      if (nEl) nEl.textContent = cur + 1;
+    };
+    root.querySelectorAll('.pcar__nav').forEach((b) =>
+      b.addEventListener('click', () => go(cur + Number(b.dataset.dir))));
+    chips.forEach((c) => c.addEventListener('click', () => go(Number(c.dataset.i))));
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(cur - 1);
+      if (e.key === 'ArrowRight') go(cur + 1);
+    });
+    let x0 = null;
+    const vp = root.querySelector('.pcar__viewport');
+    vp.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    vp.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+      x0 = null;
+    });
+    go(0);
+  });
+});

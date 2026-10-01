@@ -36,9 +36,10 @@
   <a href="#retarget-qual"><span class="n">07</span>Retargeting · qualitative</a>
   <a href="#retarget-quant"><span class="n">08</span>Retargeting · quantitative</a>
   <a href="#student"><span class="n">09</span>Student policy in sim</a>
-  <a href="#occlusion"><span class="n">10</span>Occlusion robustness</a>
-  <a href="#contributions"><span class="n">11</span>Key contributions</a>
-  <a href="#bibtex"><span class="n">12</span>BibTeX</a>
+  <a href="#prediction"><span class="n">10</span>Partner prediction</a>
+  <a href="#occlusion"><span class="n">11</span>Occlusion robustness</a>
+  <a href="#contributions"><span class="n">12</span>Key contributions</a>
+  <a href="#bibtex"><span class="n">13</span>BibTeX</a>
 </aside>
 
 <main>
@@ -52,17 +53,18 @@
     </h1>
 
     <div class="hero__authors reveal" style="transition-delay:.06s">
-      <span>Yuto Shibata<sup>*1</sup></span>
-      <span>Kotaro Amaya<sup>*1</sup></span>
-      <span>Kashu Yamazaki<sup>2</sup></span>
-      <span>Lalit Jayanti<sup>2</sup></span>
-      <span>Yoshimitsu Aoki<sup>1</sup></span>
-      <span>Mariko Isogawa<sup>1</sup></span>
-      <span>Katerina Fragkiadaki<sup>2</sup></span>
+      <span>Yuto Shibata<sup>*1,2,3</sup></span>
+      <span>Kotaro Amaya<sup>*1,2,3</sup></span>
+      <span>Kashu Yamazaki<sup>1</sup></span>
+      <span>Lalit Jayanti<sup>1</sup></span>
+      <span>Yoshimitsu Aoki<sup>2,3</sup></span>
+      <span>Mariko Isogawa<sup>2,3</sup></span>
+      <span>Katerina Fragkiadaki<sup>1</sup></span>
     </div>
     <div class="hero__affils reveal" style="transition-delay:.09s">
-      <span><sup>1</sup>&nbsp;Keio University</span>
-      <span><sup>2</sup>&nbsp;Carnegie Mellon University</span>
+      <span><sup>1</sup>&nbsp;Carnegie Mellon University</span>
+      <span><sup>2</sup>&nbsp;Keio AI Research Center</span>
+      <span><sup>3</sup>&nbsp;Keio University</span>
       <span><sup>*</sup>&nbsp;Equal contribution</span>
     </div>
 
@@ -121,11 +123,11 @@
     </div>
 
     <div class="vgrid-deploy reveal">
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
     </div>
 
     <figure class="vfeature reveal">
@@ -517,12 +519,69 @@
   </div>
 </section>
 
-
-<!-- ============================ OCCLUSION ROBUSTNESS ============================ -->
-<section class="band" id="occlusion">
+<!-- ============================ PREDICTION ============================ -->
+<section class="band" id="prediction">
   <div class="wrap">
     <div class="band__head reveal">
       <span class="band__idx">§10</span>
+      <h2 class="band__title">Generative human partner prediction</h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        From egocentric depth alone, the policy estimates the partner's
+        <span class="kw kw-green">current pose</span> (green skeleton, overlaid on the
+        <span class="kw pl-blue">ground-truth human mesh</span> in blue) and generates the
+        <span class="kw pl-red">future human motion</span> (red skeleton) together with the
+        <span class="kw pl-orange">G1's own response</span> (orange robot) at +0.5, +1.0 and +1.5&nbsp;s.
+        Predictions are overlaid on the <span class="kw pl-gray">actual future</span> of both the human and the G1
+        (gray ghosts), so the closer red/orange are to gray, the more accurate the forecast.
+      </p>
+    </div>
+
+    <ul class="plegend reveal" aria-label="Color legend">
+      <li><i style="background:#739ed9"></i>GT human (mesh)</li>
+      <li><i style="background:#21a640"></i>Current pose estimate</li>
+      <li><i style="background:#d92626"></i>Predicted future human</li>
+      <li><i style="background:#e68c26"></i>Predicted G1</li>
+      <li><i style="background:#8c8c8c"></i>Actual at t+&Delta; (ghost)</li>
+    </ul>
+
+    <div class="pcar reveal" data-pcar>
+      <div class="pcar__bar">
+        <button type="button" class="pcar__nav" data-dir="-1" aria-label="Previous interaction">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="pcar__chips" role="group" aria-label="Interaction">
+        <button type="button" class="pcar__chip is-active" data-i="0" aria-pressed="true">Hug</button>
+        <button type="button" class="pcar__chip" data-i="1" aria-pressed="false">Pat on back</button>
+        <button type="button" class="pcar__chip" data-i="2" aria-pressed="false">High-five</button>
+        <button type="button" class="pcar__chip" data-i="3" aria-pressed="false">Shake hands</button>
+        <button type="button" class="pcar__chip" data-i="4" aria-pressed="false">Link arms</button>
+        </div>
+        <button type="button" class="pcar__nav" data-dir="1" aria-label="Next interaction">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="pcar__viewport" aria-live="polite">
+        <div class="pcar__track">
+          <figure class="pcar__slide" aria-roledescription="slide" aria-label="Hug (1 of 5)"><img src="static/images/pred_hug.jpg" alt="Generative partner prediction, Hug: current pose estimate and predicted human and G1 at +0.5, +1.0, +1.5 s" loading="lazy" decoding="async"></figure>
+          <figure class="pcar__slide" aria-roledescription="slide" aria-label="Pat on back (2 of 5)"><img src="static/images/pred_patonback.jpg" alt="Generative partner prediction, Pat on back: current pose estimate and predicted human and G1 at +0.5, +1.0, +1.5 s" loading="lazy" decoding="async"></figure>
+          <figure class="pcar__slide" aria-roledescription="slide" aria-label="High-five (3 of 5)"><img src="static/images/pred_highfive.jpg" alt="Generative partner prediction, High-five: current pose estimate and predicted human and G1 at +0.5, +1.0, +1.5 s" loading="lazy" decoding="async"></figure>
+          <figure class="pcar__slide" aria-roledescription="slide" aria-label="Shake hands (4 of 5)"><img src="static/images/pred_shake.jpg" alt="Generative partner prediction, Shake hands: current pose estimate and predicted human and G1 at +0.5, +1.0, +1.5 s" loading="lazy" decoding="async"></figure>
+          <figure class="pcar__slide" aria-roledescription="slide" aria-label="Link arms (5 of 5)"><img src="static/images/pred_linkarm.jpg" alt="Generative partner prediction, Link arms: current pose estimate and predicted human and G1 at +0.5, +1.0, +1.5 s" loading="lazy" decoding="async"></figure>
+        </div>
+      </div>
+      <p class="pcar__count"><span data-pcar-n>1</span> / 5</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ OCCLUSION ROBUSTNESS ============================ -->
+<section class="band band--alt" id="occlusion">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§11</span>
       <h2 class="band__title">Robustness under occlusion <span class="sub-em">/ vs. external pose</span></h2>
     </div>
     <div class="narrow prose reveal">
@@ -554,10 +613,10 @@
 
 
 <!-- ============================ CONTRIBUTIONS ============================ -->
-<section class="band band--alt" id="contributions">
+<section class="band" id="contributions">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§11</span>
+      <span class="band__idx">§12</span>
       <h2 class="band__title">Key contributions</h2>
     </div>
     <div class="contribs reveal">
@@ -588,10 +647,10 @@
 
 
 <!-- ============================ BIBTEX ============================ -->
-<section class="band" id="bibtex">
+<section class="band band--alt" id="bibtex">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§12</span>
+      <span class="band__idx">§13</span>
       <h2 class="band__title">BibTeX</h2>
     </div>
     <div class="narrow reveal">
