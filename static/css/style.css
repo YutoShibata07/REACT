@@ -680,3 +680,13 @@ figure { margin: 0; }
   .hero__demo .vcell, .hero__demo .vcell:nth-child(4) { grid-column: span 1; }
   .hero__demo .vcell:nth-child(5) { grid-column: 1 / span 2; width: calc(50% - .35rem); justify-self: center; }
 }
+
+/* hero demo: 2 x 3 grid (5 interactions + long-horizon) */
+.hero__demo { grid-template-columns: repeat(3, 1fr); }
+.hero__demo .vcell, .hero__demo .vcell:nth-child(4), .hero__demo .vcell:nth-child(5) { grid-column: auto; }
+@media (max-width: 720px) {
+  .hero__demo { grid-template-columns: repeat(2, 1fr); }
+  .hero__demo .vcell:nth-child(5) { grid-column: auto; width: auto; justify-self: stretch; }
+}
+.hero__demo { align-items: start; }
+.hero__demo .vcell .vframe { flex: none; }
