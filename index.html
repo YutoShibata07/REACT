@@ -19,7 +19,7 @@
     REACT<span class="dot">.</span> <small>CoRL 2026</small>
   </div>
   <nav class="site-nav__links">
-    <a href="#deploy">Results</a>
+    <a href="#demo">Results</a>
     <a href="#method">Method</a>
     <a href="#bibtex">Cite</a>
   </nav>
@@ -27,7 +27,7 @@
 
 <aside class="toc" aria-label="Contents">
   <div class="toc__title">Contents</div>
-  <a href="#deploy"><span class="n">01</span>Real-robot deployment</a>
+  <a href="#deploy"><span class="n">01</span>Onboard sensing</a>
   <a href="#sim-eval"><span class="n">02</span>Sim rollouts · unseen</a>
   <a href="#abstract"><span class="n">03</span>Abstract</a>
   <a href="#approach"><span class="n">04</span>Contact-centric approach</a>
@@ -86,24 +86,23 @@
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
         Code · soon
       </a>
-      <a href="#deploy" class="btn">
+      <a href="#demo" class="btn">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Video
       </a>
     </div>
 
-    <div class="hero__media reveal" style="transition-delay:.38s">
-      <figure class="vframe">
-        <video autoplay muted loop playsinline preload="auto">
-          <source src="static/videos/real_depthview.mp4" type="video/mp4">
-        </video>
-      </figure>
-      <p class="cap">
-        A single egocentric <b>depth</b> policy executes contact-rich interactions on a real
-        Unitree&nbsp;G1 using <b>onboard sensing alone</b> &mdash; left: onboard RGB context;
-        right: the depth observation the policy consumes. Faces blurred for privacy.
-      </p>
+    <div class="vgrid-deploy hero__demo reveal" id="demo" style="transition-delay:.38s">
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
+      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
     </div>
+    <p class="cap hero__democap reveal">
+      Five contact-rich interactions on a real Unitree&nbsp;G1, driven by a single egocentric depth policy
+      using <b>onboard sensing alone</b>. Faces blurred for privacy.
+    </p>
   </div>
 </section>
 
@@ -113,22 +112,22 @@
   <div class="wrap">
     <div class="band__head reveal">
       <span class="band__idx">§01</span>
-      <h2 class="band__title">Real-robot deployment</h2>
+      <h2 class="band__title">Onboard egocentric sensing</h2>
     </div>
     <div class="narrow prose reveal">
       <p class="lead">
-        REACT's egocentric depth policy executes five contact-rich interactions on a real Unitree G1
-        humanoid using only onboard sensing. Faces blurred for privacy.
+        All interactions above run on the real Unitree&nbsp;G1 using <strong class="kc">onboard sensing alone</strong>: a single egocentric
+        <b>depth</b> policy perceives the partner and executes the interaction.
       </p>
     </div>
 
-    <div class="vgrid-deploy reveal">
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_v2_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
-    </div>
+    <figure class="vfeature vfeature--wide reveal">
+      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_depthview.mp4" type="video/mp4"></video></div>
+      <p class="cap">
+        <b>What the robot sees.</b> Left: onboard RGB, shown for context only. Right: the egocentric depth
+        observation the policy consumes.
+      </p>
+    </figure>
 
     <figure class="vfeature reveal">
       <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_longhorizon_hug.mp4" type="video/mp4"></video></div>
