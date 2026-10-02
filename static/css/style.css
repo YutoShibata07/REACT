@@ -695,3 +695,21 @@ figure { margin: 0; }
 .hero__demo .vlabel { font-size: .95rem; letter-spacing: .07em; color: var(--ink); font-weight: 600; margin-top: .7rem; }
 .hero__demo .vlabel::before { width: 8px; height: 8px; }
 @media (max-width: 720px) { .hero__demo .vlabel { font-size: .8rem; } }
+
+/* hero demo: speed / autonomy badges, top-right of the grid */
+.hero__badges { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .5rem; margin: 2.6rem 0 -1.9rem; }
+.hbadge {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font: 600 .8rem/1 'Inter', sans-serif; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--ink); border-radius: 999px; padding: .5rem .85rem;
+}
+.hbadge b { font-weight: 800; font-size: 1.05em; }
+.hbadge--accent { color: #fff; background: var(--accent); border-color: var(--accent); }
+.hbadge__dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: hbpulse 1.6s ease-in-out infinite; }
+@keyframes hbpulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .hbadge__dot { animation: none; } }
+@media (max-width: 720px) {
+  .hero__badges { justify-content: center; margin: 2rem 0 -1.6rem; }
+  .hbadge { font-size: .7rem; padding: .45rem .7rem; }
+}
