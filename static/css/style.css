@@ -669,3 +669,14 @@ figure { margin: 0; }
   .hero__demo { flex-wrap: wrap; justify-content: center; }
   .hero__demo .vcell { flex: 0 1 calc(50% - .4rem); }
 }
+
+/* hero demo: two rows (3 + 2), larger tiles */
+.hero__demo { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.1rem 1rem; }
+.hero__demo .vcell { grid-column: span 2; min-width: 0; }
+.hero__demo .vcell:nth-child(4) { grid-column: 2 / span 2; }
+.hero__demo .vcell:nth-child(5) { grid-column: 4 / span 2; }
+@media (max-width: 720px) {
+  .hero__demo { grid-template-columns: repeat(2, 1fr); gap: .9rem .7rem; }
+  .hero__demo .vcell, .hero__demo .vcell:nth-child(4) { grid-column: span 1; }
+  .hero__demo .vcell:nth-child(5) { grid-column: 1 / span 2; width: calc(50% - .35rem); justify-self: center; }
+}
