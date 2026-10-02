@@ -690,3 +690,8 @@ figure { margin: 0; }
 }
 .hero__demo { align-items: start; }
 .hero__demo .vcell .vframe { flex: none; }
+
+/* hero demo: larger action labels */
+.hero__demo .vlabel { font-size: .95rem; letter-spacing: .07em; color: var(--ink); font-weight: 600; margin-top: .7rem; }
+.hero__demo .vlabel::before { width: 8px; height: 8px; }
+@media (max-width: 720px) { .hero__demo .vlabel { font-size: .8rem; } }

@@ -60,20 +60,32 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---- Autoplay videos when scrolled into view; pause when out ----
+  // A pause the viewer makes with the controls is respected: scrolling back does not resume it.
   const videos = document.querySelectorAll('video');
   if ('IntersectionObserver' in window) {
+    const autoPaused = new WeakSet();
+    const userPaused = new WeakSet();
     const vidObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const v = entry.target;
         if (entry.isIntersecting) {
+          if (userPaused.has(v)) return;
           const p = v.play();
           if (p !== undefined) p.catch(() => { /* autoplay blocked */ });
-        } else {
+        } else if (!v.paused) {
+          autoPaused.add(v);
           v.pause();
         }
       });
     }, { threshold: 0.25 });
-    videos.forEach((v) => vidObserver.observe(v));
+    videos.forEach((v) => {
+      v.addEventListener('pause', () => {
+        if (autoPaused.has(v)) autoPaused.delete(v);
+        else if (!v.ended) userPaused.add(v);
+      });
+      v.addEventListener('play', () => userPaused.delete(v));
+      vidObserver.observe(v);
+    });
   }
 });
 

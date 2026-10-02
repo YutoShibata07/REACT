@@ -35,11 +35,10 @@
   <a href="#contact"><span class="n">06</span>VLM contact annotation</a>
   <a href="#retarget-qual"><span class="n">07</span>Retargeting · qualitative</a>
   <a href="#retarget-quant"><span class="n">08</span>Retargeting · quantitative</a>
-  <a href="#student"><span class="n">09</span>Student policy in sim</a>
-  <a href="#prediction"><span class="n">10</span>Partner prediction</a>
-  <a href="#occlusion"><span class="n">11</span>Occlusion robustness</a>
-  <a href="#contributions"><span class="n">12</span>Key contributions</a>
-  <a href="#bibtex"><span class="n">13</span>BibTeX</a>
+  <a href="#prediction"><span class="n">09</span>Partner prediction</a>
+  <a href="#occlusion"><span class="n">10</span>Occlusion robustness</a>
+  <a href="#contributions"><span class="n">11</span>Key contributions</a>
+  <a href="#bibtex"><span class="n">12</span>BibTeX</a>
 </aside>
 
 <main>
@@ -93,12 +92,12 @@
     </div>
 
     <div class="vgrid-deploy hero__demo reveal" id="demo" style="transition-delay:.38s">
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
-      <div class="vcell"><figure class="vframe"><video muted loop playsinline preload="metadata"><source src="static/videos/real_v2_longhorizon_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Long-horizon &middot; hug &times;3</span></div>
+      <div class="vcell"><figure class="vframe"><video controls muted loop playsinline preload="metadata"><source src="static/videos/real_v2_highfive.mp4" type="video/mp4"></video></figure><span class="vlabel">High-five</span></div>
+      <div class="vcell"><figure class="vframe"><video controls muted loop playsinline preload="metadata"><source src="static/videos/real_v2_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Hug</span></div>
+      <div class="vcell"><figure class="vframe"><video controls muted loop playsinline preload="metadata"><source src="static/videos/real_v2_linkarm.mp4" type="video/mp4"></video></figure><span class="vlabel">Link arms</span></div>
+      <div class="vcell"><figure class="vframe"><video controls muted loop playsinline preload="metadata"><source src="static/videos/real_v2_patonback.mp4" type="video/mp4"></video></figure><span class="vlabel">Pat on back</span></div>
+      <div class="vcell"><figure class="vframe"><video controls muted loop playsinline preload="metadata"><source src="static/videos/real_v2_shake.mp4" type="video/mp4"></video></figure><span class="vlabel">Shake hands</span></div>
+      <div class="vcell"><figure class="vframe"><video controls muted loop playsinline preload="metadata"><source src="static/videos/real_v2_longhorizon_hug.mp4" type="video/mp4"></video></figure><span class="vlabel">Long-horizon &middot; hug &times;3</span></div>
     </div>
     <p class="cap hero__democap reveal">
       Five contact-rich interactions on a real Unitree&nbsp;G1, plus a single long-horizon rollout with three
@@ -124,7 +123,7 @@
 
 
     <figure class="vfeature vfeature--wide reveal">
-      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/real_depthview.mp4" type="video/mp4"></video></div>
+      <div class="vframe"><video controls muted loop playsinline preload="none"><source src="static/videos/real_depthview.mp4" type="video/mp4"></video></div>
       <p class="cap">
         <b>What the robot sees.</b> Left: onboard RGB, shown for context only. Right: the egocentric depth
         observation the policy consumes.
@@ -434,15 +433,15 @@
     </div>
 
     <figure class="vfull reveal">
-      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/retarget_highfive.mp4" type="video/mp4"></video></div>
+      <div class="vframe"><video controls muted loop playsinline preload="none"><source src="static/videos/retarget_highfive.mp4" type="video/mp4"></video></div>
       <p class="cap"><b>High-five</b> &mdash; Original motion · OmniRetarget · Ours.</p>
     </figure>
     <figure class="vfull reveal">
-      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/retarget_hug.mp4" type="video/mp4"></video></div>
+      <div class="vframe"><video controls muted loop playsinline preload="none"><source src="static/videos/retarget_hug.mp4" type="video/mp4"></video></div>
       <p class="cap"><b>Hug</b> &mdash; Original motion · OmniRetarget · Ours.</p>
     </figure>
     <figure class="vfull reveal">
-      <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/retarget_tile_arrows.mp4" type="video/mp4"></video></div>
+      <div class="vframe"><video controls muted loop playsinline preload="none"><source src="static/videos/retarget_tile_arrows.mp4" type="video/mp4"></video></div>
       <p class="cap">Retargeted interactions across the corpus. <span class="kw kw-amber">Red arrows</span> mark the contacts REACT preserves (Ours column).</p>
     </figure>
   </div>
@@ -480,43 +479,11 @@
 </section>
 
 
-<!-- ============================ STUDENT QUAL ============================ -->
-<section class="band band--alt" id="student">
+<!-- ============================ PREDICTION ============================ -->
+<section class="band band--alt" id="prediction">
   <div class="wrap">
     <div class="band__head reveal">
       <span class="band__idx">§09</span>
-      <h2 class="band__title">Student policy in simulation</h2>
-    </div>
-    <div class="narrow prose reveal">
-      <p>
-        The deployable student policy consumes <strong>only onboard depth</strong>. During training we
-        render the human partner with <strong class="kc">photorealistic in-loop SMPL-X depth</strong> (left), so
-        the policy learns from realistic human-shaped observations rather than primitive proxies,
-        directly narrowing the sim-to-real gap. From this depth alone it <strong class="kc">predicts the partner's pose as
-        an auxiliary task</strong> (right): <span class="kw kw-green">green</span> is the
-        estimated current state and <span class="kw kw-purple">purple</span> the predicted future state
-        (darker = longer-term), letting it infer latent interaction state under occlusion.
-      </p>
-    </div>
-
-    <div class="vgrid vgrid--2 reveal" style="max-width:920px;margin-left:auto;margin-right:auto">
-      <div class="vcell">
-        <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_depth.mp4" type="video/mp4"></video></figure>
-        <span class="vlabel">Realistic human depth &mdash; policy input</span>
-      </div>
-      <div class="vcell">
-        <figure class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_pose.mp4" type="video/mp4"></video></figure>
-        <span class="vlabel">Partner-pose prediction &mdash; auxiliary task</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ PREDICTION ============================ -->
-<section class="band" id="prediction">
-  <div class="wrap">
-    <div class="band__head reveal">
-      <span class="band__idx">§10</span>
       <h2 class="band__title">Generative human partner prediction</h2>
     </div>
     <div class="narrow prose reveal">
@@ -571,10 +538,10 @@
 
 
 <!-- ============================ OCCLUSION ROBUSTNESS ============================ -->
-<section class="band band--alt" id="occlusion">
+<section class="band" id="occlusion">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§11</span>
+      <span class="band__idx">§10</span>
       <h2 class="band__title">Robustness under occlusion <span class="sub-em">/ vs. external pose</span></h2>
     </div>
     <div class="narrow prose reveal">
@@ -587,7 +554,7 @@
 
     <div class="split reveal">
       <figure>
-        <div class="vframe"><video muted loop playsinline preload="none"><source src="static/videos/insim_rollout.mp4" type="video/mp4"></video></div>
+        <div class="vframe"><video controls muted loop playsinline preload="none"><source src="static/videos/insim_rollout.mp4" type="video/mp4"></video></div>
         <p class="cap">
           The <span class="kw kw-amber">HMR2 prediction</span> (red) drifts from the true
           <span class="kw kw-green">human (sim)</span> at close range while the G1 robot interacts.
@@ -606,10 +573,10 @@
 
 
 <!-- ============================ CONTRIBUTIONS ============================ -->
-<section class="band" id="contributions">
+<section class="band band--alt" id="contributions">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§12</span>
+      <span class="band__idx">§11</span>
       <h2 class="band__title">Key contributions</h2>
     </div>
     <div class="contribs reveal">
@@ -640,10 +607,10 @@
 
 
 <!-- ============================ BIBTEX ============================ -->
-<section class="band band--alt" id="bibtex">
+<section class="band" id="bibtex">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§13</span>
+      <span class="band__idx">§12</span>
       <h2 class="band__title">BibTeX</h2>
     </div>
     <div class="narrow reveal">
