@@ -35,10 +35,11 @@
   <a href="#contact"><span class="n">06</span>VLM contact annotation</a>
   <a href="#retarget-qual"><span class="n">07</span>Retargeting · qualitative</a>
   <a href="#retarget-quant"><span class="n">08</span>Retargeting · quantitative</a>
-  <a href="#prediction"><span class="n">09</span>Partner prediction</a>
-  <a href="#occlusion"><span class="n">10</span>Occlusion robustness</a>
-  <a href="#contributions"><span class="n">11</span>Key contributions</a>
-  <a href="#bibtex"><span class="n">12</span>BibTeX</a>
+  <a href="#policy-quant"><span class="n">09</span>Teacher &amp; student · quantitative</a>
+  <a href="#prediction"><span class="n">10</span>Partner prediction</a>
+  <a href="#occlusion"><span class="n">11</span>Occlusion robustness</a>
+  <a href="#contributions"><span class="n">12</span>Key contributions</a>
+  <a href="#bibtex"><span class="n">13</span>BibTeX</a>
 </aside>
 
 <main>
@@ -463,14 +464,15 @@
       <p>
         Across a user study and physical-plausibility metrics, REACT attains the best perceived
         quality and the highest contact precision/recall while keeping jitter and penetration low
-        relative to GMR and OmniRetarget.
+        relative to GMR and OmniRetarget. Stage&nbsp;2 co-optimisation lifts recall from 13.4% to 58.0%
+        at unchanged jitter, and VLM verification further raises precision from 11.6% to 14.2%.
       </p>
     </div>
 
     <div class="reveal">
-      <figure class="legendbar quant-legend"><img src="static/images/legend_retarget.png" alt="Legend: GMR, OmniRetarget, Ours w/o VLM, Ours"></figure>
+      <figure class="legendbar quant-legend"><img src="static/images/legend_retarget.png" alt="Legend: GMR, OmniRetarget, Ours w/o Stage 2, Ours w/o VLM, Ours"></figure>
       <div class="quant-layout">
-        <figure class="plate quant-userstudy"><img src="static/images/chart_userstudy.png" alt="User study rank (lower is better)"></figure>
+        <figure class="plate quant-userstudy"><img src="static/images/chart_userstudy.png" alt="User study rank (lower is better); Ours w/o Stage 2 not evaluated"></figure>
         <div class="quant-grid2x2">
           <figure class="plate"><img src="static/images/chart_precision.png" alt="Contact precision (%)"></figure>
           <figure class="plate"><img src="static/images/chart_recall.png" alt="Contact recall (%)"></figure>
@@ -483,11 +485,53 @@
 </section>
 
 
-<!-- ============================ PREDICTION ============================ -->
-<section class="band band--alt" id="prediction">
+<!-- ============================ POLICY QUANT ============================ -->
+<section class="band band--alt" id="policy-quant">
   <div class="wrap">
     <div class="band__head reveal">
       <span class="band__idx">§09</span>
+      <h2 class="band__title">Teacher &amp; student policies <span class="sub-em">/ quantitative</span></h2>
+    </div>
+    <div class="narrow prose reveal">
+      <p>
+        <strong>Teacher.</strong> Both contact components matter on the most contact-rich actions: the
+        <strong class="kc">mesh contact reward</strong> lifts contact recall by +34.3&nbsp;pt on link-arms and
+        +21.7&nbsp;pt on hug, while <strong class="kc">VLM contact filtering</strong> adds +7.0&nbsp;pt on hug,
+        +3.2&nbsp;pt on high-five and +1.4&nbsp;pt on link-arms.
+      </p>
+    </div>
+
+    <div class="reveal">
+      <figure class="legendbar quant-legend"><img src="static/images/legend_teacher.png" alt="Legend: Ours, (-) mesh contact reward, (-) VLM contact filtering"></figure>
+      <div class="quant-grid2x2">
+        <figure class="plate"><img src="static/images/chart_teacher_contact.png" alt="Teacher contact recall at 15 cm (%)"></figure>
+        <figure class="plate"><img src="static/images/chart_teacher_mpjpe.png" alt="Teacher MPJPE (cm)"></figure>
+      </div>
+      <p class="cap">Teacher tracking. Contact recall@15&nbsp;cm (mean &plusmn; std over 3 seeds) and MPJPE.</p>
+    </div>
+
+    <div class="narrow prose reveal" style="margin-top:2rem">
+      <p>
+        <strong>Student.</strong> Behaviour cloning alone is a weak signal for the depth encoder: removing
+        <strong class="kc">partner prediction</strong> lowers held-out contact recall on four of five interactions.
+        Most of the gain comes from <strong class="kc">generating the partner's future</strong>, which adds
+        6.8&ndash;25.3&nbsp;pt on hand-shake, link-arms and pat-on-back; high-five is the exception, where the
+        deterministic variant is best.
+      </p>
+    </div>
+
+    <figure class="plate reveal">
+      <img src="static/images/chart_student_ablation.png" alt="Student contact recall at 30 cm across five actions for Ours and three partner-prediction ablations">
+      <p class="cap">Student policy, contact recall@30&nbsp;cm on the held-out split (mean over 5 room layouts). Components are removed cumulatively.</p>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ PREDICTION ============================ -->
+<section class="band" id="prediction">
+  <div class="wrap">
+    <div class="band__head reveal">
+      <span class="band__idx">§10</span>
       <h2 class="band__title">Generative human partner prediction</h2>
     </div>
     <div class="narrow prose reveal">
@@ -542,17 +586,17 @@
 
 
 <!-- ============================ OCCLUSION ROBUSTNESS ============================ -->
-<section class="band" id="occlusion">
+<section class="band band--alt" id="occlusion">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§10</span>
+      <span class="band__idx">§11</span>
       <h2 class="band__title">Robustness under occlusion <span class="sub-em">/ vs. external pose</span></h2>
     </div>
     <div class="narrow prose reveal">
       <p>
-        An external RGB-based human pose estimator (HMR2) becomes inaccurate at close range, where
-        the partner is occluded or truncated. REACT's auxiliary pose loss lets the policy recover
-        interaction state from depth and improves contact recall across nearly all actions.
+        An external RGB-based human pose estimator (HMR2.0) becomes inaccurate at close range, where
+        the partner is occluded or truncated. Feeding its estimate to the policy collapses contact recall
+        on every interaction, while REACT's end-to-end depth policy recovers the interaction state.
       </p>
     </div>
 
@@ -565,10 +609,10 @@
         </p>
       </figure>
       <div>
-        <div class="legendbar"><img src="static/images/legend_insim.png" alt="Legend: External human pose (HMR2), Ours w/o aux loss, Ours (E2E)"></div>
+        <div class="legendbar"><img src="static/images/legend_insim.png" alt="Legend: External human pose (HMR2.0), Ours (E2E)"></div>
         <figure class="plate">
-          <img src="static/images/chart_insim_recall.png" alt="In-sim contact recall@30cm across five actions">
-          <p class="cap">In-sim contact recall@30&nbsp;cm of the student policy across five actions.</p>
+          <img src="static/images/chart_insim_recall.png" alt="In-sim contact recall@30cm across five actions: external pose vs. end-to-end">
+          <p class="cap">In-sim contact recall@30&nbsp;cm across five actions, external pose vs. end-to-end (both with an earlier model setting than the ablation in §09).</p>
         </figure>
       </div>
     </div>
@@ -577,10 +621,10 @@
 
 
 <!-- ============================ CONTRIBUTIONS ============================ -->
-<section class="band band--alt" id="contributions">
+<section class="band" id="contributions">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§11</span>
+      <span class="band__idx">§12</span>
       <h2 class="band__title">Key contributions</h2>
     </div>
     <div class="contribs reveal">
@@ -611,10 +655,10 @@
 
 
 <!-- ============================ BIBTEX ============================ -->
-<section class="band" id="bibtex">
+<section class="band band--alt" id="bibtex">
   <div class="wrap">
     <div class="band__head reveal">
-      <span class="band__idx">§12</span>
+      <span class="band__idx">§13</span>
       <h2 class="band__title">BibTeX</h2>
     </div>
     <div class="narrow reveal">
